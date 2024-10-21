@@ -3,8 +3,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
+using Microsoft.Extensions.Configuration;
 using Soenneker.Utils.HttpClientCache.Abstract;
 using Soenneker.Utils.HttpClientCache.Dtos;
+using Soenneker.Extensions.Configuration;
 
 namespace Soenneker.Bland.Client;
 
@@ -13,11 +15,25 @@ public class BlandClient: IBlandClient
 {
     private readonly IHttpClientCache _httpClientCache;
 
-    private readonly HttpClientOptions _options = new() { BaseAddress = "https://api.bland.ai/v1/" };
+    private readonly HttpClientOptions _options;
 
-    public BlandClient(IHttpClientCache httpClientCache)
+    public BlandClient(IHttpClientCache httpClientCache, IConfiguration configuration)
     {
         _httpClientCache = httpClientCache;
+
+        var apiKey = configuration.GetValueStrict<string>("Bland:ApiKey");
+        var encryptedKey = configuration.GetValue<string>("Bland:EncryptedKey");
+
+        _options = new HttpClientOptions
+        {
+            BaseAddress = "https://api.bland.ai/v1/",
+            DefaultRequestHeaders = new System.Collections.Generic.Dictionary<string, string> {{"authorization", apiKey } }
+        };
+
+        if (encryptedKey is not null)
+        {
+            _options.DefaultRequestHeaders.Add("encrypted_key", encryptedKey);
+        }
     }
 
     public ValueTask<HttpClient> Get(CancellationToken cancellationToken = default)
