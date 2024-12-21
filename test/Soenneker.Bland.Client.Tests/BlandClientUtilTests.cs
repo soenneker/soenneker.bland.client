@@ -8,10 +8,16 @@ namespace Soenneker.Bland.Client.Tests;
 [Collection("Collection")]
 public class BlandClientUtilTests : FixturedUnitTest
 {
-    private readonly IBlandClient _util;
+    private readonly IBlandClientUtil _util;
 
     public BlandClientUtilTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
     {
-        _util = Resolve<IBlandClient>(true);
+        _util = Resolve<IBlandClientUtil>(true);
+    }
+
+    [Fact]
+    public void Default()
+    {
+
     }
 }

@@ -11,20 +11,24 @@ namespace Soenneker.Bland.Client.Registrars;
 public static class BlandClientRegistrar
 {
     /// <summary>
-    /// Adds <see cref="IBlandClient"/> as a singleton service. <para/>
+    /// Adds <see cref="IBlandClientUtil"/> as a singleton service. <para/>
     /// </summary>
-    public static void AddBlandClientAsSingleton(this IServiceCollection services)
+    public static IServiceCollection AddBlandClientAsSingleton(this IServiceCollection services)
     {
         services.AddHttpClientCache();
-        services.TryAddSingleton<IBlandClient, BlandClient>();
+        services.TryAddSingleton<IBlandClientUtil, BlandClientUtil>();
+
+        return services;
     }
 
     /// <summary>
-    /// Adds <see cref="IBlandClient"/> as a scoped service. <para/>
+    /// Adds <see cref="IBlandClientUtil"/> as a scoped service. <para/>
     /// </summary>
-    public static void AddBlandClientAsScoped(this IServiceCollection services)
+    public static IServiceCollection AddBlandClientUtilAsScoped(this IServiceCollection services)
     {
         services.AddHttpClientCache();
-        services.TryAddScoped<IBlandClient, BlandClient>();
+        services.TryAddScoped<IBlandClientUtil, BlandClientUtil>();
+
+        return services;
     }
 }

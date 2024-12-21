@@ -10,14 +10,14 @@ using Soenneker.Extensions.Configuration;
 
 namespace Soenneker.Bland.Client;
 
-/// <inheritdoc cref="IBlandClient"/>
-public class BlandClient: IBlandClient
+/// <inheritdoc cref="IBlandClientUtil"/>
+public class BlandClientUtil : IBlandClientUtil
 {
     private readonly IHttpClientCache _httpClientCache;
 
     private readonly HttpClientOptions _options;
 
-    public BlandClient(IHttpClientCache httpClientCache, IConfiguration configuration)
+    public BlandClientUtil(IHttpClientCache httpClientCache, IConfiguration configuration)
     {
         _httpClientCache = httpClientCache;
 
@@ -38,20 +38,20 @@ public class BlandClient: IBlandClient
 
     public ValueTask<HttpClient> Get(CancellationToken cancellationToken = default)
     {
-        return _httpClientCache.Get(nameof(BlandClient), _options, cancellationToken: cancellationToken);
+        return _httpClientCache.Get(nameof(BlandClientUtil), _options, cancellationToken: cancellationToken);
     }
 
     public void Dispose()
     {
         GC.SuppressFinalize(this);
 
-        _httpClientCache.RemoveSync(nameof(BlandClient));
+        _httpClientCache.RemoveSync(nameof(BlandClientUtil));
     }
 
     public ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);
 
-        return _httpClientCache.Remove(nameof(BlandClient));
+        return _httpClientCache.Remove(nameof(BlandClientUtil));
     }
 }
