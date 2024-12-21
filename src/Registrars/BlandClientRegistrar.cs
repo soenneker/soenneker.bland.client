@@ -13,7 +13,7 @@ public static class BlandClientRegistrar
     /// <summary>
     /// Adds <see cref="IBlandClientUtil"/> as a singleton service. <para/>
     /// </summary>
-    public static IServiceCollection AddBlandClientAsSingleton(this IServiceCollection services)
+    public static IServiceCollection AddBlandClientUtilAsSingleton(this IServiceCollection services)
     {
         services.AddHttpClientCache();
         services.TryAddSingleton<IBlandClientUtil, BlandClientUtil>();

@@ -2,7 +2,6 @@ using Soenneker.Bland.Client.Abstract;
 using Soenneker.Tests.FixturedUnit;
 using Xunit;
 
-
 namespace Soenneker.Bland.Client.Tests;
 
 [Collection("Collection")]
