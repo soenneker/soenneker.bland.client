@@ -15,8 +15,8 @@ public static class BlandClientRegistrar
     /// </summary>
     public static IServiceCollection AddBlandClientUtilAsSingleton(this IServiceCollection services)
     {
-        services.AddHttpClientCache();
-        services.TryAddSingleton<IBlandClientUtil, BlandClientUtil>();
+        services.AddHttpClientCacheAsSingleton()
+                .TryAddSingleton<IBlandClientUtil, BlandClientUtil>();
 
         return services;
     }
@@ -26,8 +26,8 @@ public static class BlandClientRegistrar
     /// </summary>
     public static IServiceCollection AddBlandClientUtilAsScoped(this IServiceCollection services)
     {
-        services.AddHttpClientCache();
-        services.TryAddScoped<IBlandClientUtil, BlandClientUtil>();
+        services.AddHttpClientCacheAsSingleton()
+                .TryAddScoped<IBlandClientUtil, BlandClientUtil>();
 
         return services;
     }
