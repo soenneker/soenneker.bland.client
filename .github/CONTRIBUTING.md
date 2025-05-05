@@ -1,4 +1,4 @@
-# Contributing to Soenneker.Bland.Client
+﻿# Contributing to Soenneker.Bland.Client
 
 We're excited that you're interested in contributing!
 
