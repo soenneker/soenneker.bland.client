@@ -1,12 +1,14 @@
-using Soenneker.Bland.Client.Abstract;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Threading;
-using System;
 using Microsoft.Extensions.Configuration;
-using Soenneker.Utils.HttpClientCache.Abstract;
-using Soenneker.Utils.HttpClientCache.Dtos;
+using Soenneker.Bland.Client.Abstract;
+using Soenneker.Dtos.HttpClientOptions;
 using Soenneker.Extensions.Configuration;
+using Soenneker.Extensions.String;
+using Soenneker.Utils.HttpClientCache.Abstract;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Soenneker.Bland.Client;
 
@@ -14,44 +16,49 @@ namespace Soenneker.Bland.Client;
 public class BlandClientUtil : IBlandClientUtil
 {
     private readonly IHttpClientCache _httpClientCache;
-
-    private readonly HttpClientOptions _options;
+    private readonly IConfiguration _configuration;
+    private const string _clientId = nameof(BlandClientUtil);
 
     public BlandClientUtil(IHttpClientCache httpClientCache, IConfiguration configuration)
     {
         _httpClientCache = httpClientCache;
-
-        var apiKey = configuration.GetValueStrict<string>("Bland:ApiKey");
-        var encryptedKey = configuration.GetValue<string>("Bland:EncryptedKey");
-
-        _options = new HttpClientOptions
-        {
-            BaseAddress = "https://api.bland.ai/v1/",
-            DefaultRequestHeaders = new System.Collections.Generic.Dictionary<string, string> {{"authorization", apiKey } }
-        };
-
-        if (encryptedKey is not null)
-        {
-            _options.DefaultRequestHeaders.Add("encrypted_key", encryptedKey);
-        }
+        _configuration = configuration;
     }
 
     public ValueTask<HttpClient> Get(CancellationToken cancellationToken = default)
     {
-        return _httpClientCache.Get(nameof(BlandClientUtil), _options, cancellationToken: cancellationToken);
+        return _httpClientCache.Get(_clientId, () =>
+        {
+            var apiKey = _configuration.GetValueStrict<string>("Bland:ApiKey");
+            var encryptedKey = _configuration.GetValue<string>("Bland:EncryptedKey");
+
+            var headers = new Dictionary<string, string>
+            {
+                { "authorization", apiKey }
+            };
+
+            if (encryptedKey.HasContent())
+                headers.Add("encrypted_key", encryptedKey);
+
+            return new HttpClientOptions
+            {
+                BaseAddress = "https://api.bland.ai/v1/",
+                DefaultRequestHeaders = headers
+            };
+        }, cancellationToken);
     }
 
     public void Dispose()
     {
         GC.SuppressFinalize(this);
 
-        _httpClientCache.RemoveSync(nameof(BlandClientUtil));
+        _httpClientCache.RemoveSync(_clientId);
     }
 
     public ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);
 
-        return _httpClientCache.Remove(nameof(BlandClientUtil));
+        return _httpClientCache.Remove(_clientId);
     }
 }
