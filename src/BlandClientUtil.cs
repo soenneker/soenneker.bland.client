@@ -4,7 +4,6 @@ using Soenneker.Dtos.HttpClientOptions;
 using Soenneker.Extensions.Configuration;
 using Soenneker.Extensions.String;
 using Soenneker.Utils.HttpClientCache.Abstract;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
@@ -13,7 +12,7 @@ using System.Threading.Tasks;
 namespace Soenneker.Bland.Client;
 
 /// <inheritdoc cref="IBlandClientUtil"/>
-public class BlandClientUtil : IBlandClientUtil
+public sealed class BlandClientUtil : IBlandClientUtil
 {
     private readonly IHttpClientCache _httpClientCache;
     private readonly IConfiguration _configuration;
@@ -50,15 +49,11 @@ public class BlandClientUtil : IBlandClientUtil
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
-
         _httpClientCache.RemoveSync(_clientId);
     }
 
     public ValueTask DisposeAsync()
     {
-        GC.SuppressFinalize(this);
-
         return _httpClientCache.Remove(_clientId);
     }
 }
