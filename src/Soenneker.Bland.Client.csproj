@@ -14,7 +14,7 @@
         <AssemblyName>Soenneker.Bland.Client</AssemblyName>
         <PackageId>Soenneker.Bland.Client</PackageId>
         <PackageTags>bland client ai calls sms http blandclient util csharp dotnet c# .net</PackageTags>
-        <Copyright>Copyright © 2024-2025 Jake Soenneker</Copyright>
+        <Copyright>Copyright © 2024-2026 Jake Soenneker</Copyright>
         <Authors>Jake Soenneker</Authors>
         <Company>https://soenneker.com</Company>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
