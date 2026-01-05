@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Extensions.Configuration;
 using Soenneker.Bland.Client.Abstract;
 using Soenneker.Dtos.HttpClientOptions;
@@ -15,36 +16,37 @@ namespace Soenneker.Bland.Client;
 public sealed class BlandClientUtil : IBlandClientUtil
 {
     private readonly IHttpClientCache _httpClientCache;
-    private readonly IConfiguration _configuration;
+    private readonly string _apiKey;
+    private readonly string? _encryptedKey;
     private const string _clientId = nameof(BlandClientUtil);
 
     public BlandClientUtil(IHttpClientCache httpClientCache, IConfiguration configuration)
     {
         _httpClientCache = httpClientCache;
-        _configuration = configuration;
+        _apiKey = configuration.GetValueStrict<string>("Bland:ApiKey");
+        _encryptedKey = configuration.GetValue<string>("Bland:EncryptedKey");
     }
 
     public ValueTask<HttpClient> Get(CancellationToken cancellationToken = default)
     {
-        return _httpClientCache.Get(_clientId, () =>
+        return _httpClientCache.Get(_clientId, CreateHttpClientOptions, cancellationToken);
+    }
+
+    private HttpClientOptions? CreateHttpClientOptions()
+    {
+        var headers = new Dictionary<string, string>
         {
-            var apiKey = _configuration.GetValueStrict<string>("Bland:ApiKey");
-            var encryptedKey = _configuration.GetValue<string>("Bland:EncryptedKey");
+            { "authorization", _apiKey }
+        };
 
-            var headers = new Dictionary<string, string>
-            {
-                { "authorization", apiKey }
-            };
+        if (_encryptedKey.HasContent())
+            headers.Add("encrypted_key", _encryptedKey);
 
-            if (encryptedKey.HasContent())
-                headers.Add("encrypted_key", encryptedKey);
-
-            return new HttpClientOptions
-            {
-                BaseAddress = "https://api.bland.ai/v1/",
-                DefaultRequestHeaders = headers
-            };
-        }, cancellationToken);
+        return new HttpClientOptions
+        {
+            BaseAddressUri = new Uri("https://api.bland.ai/v1/"),
+            DefaultRequestHeaders = headers
+        };
     }
 
     public void Dispose()
