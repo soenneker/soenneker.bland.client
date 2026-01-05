@@ -29,24 +29,23 @@ public sealed class BlandClientUtil : IBlandClientUtil
 
     public ValueTask<HttpClient> Get(CancellationToken cancellationToken = default)
     {
-        return _httpClientCache.Get(_clientId, CreateHttpClientOptions, cancellationToken);
-    }
-
-    private HttpClientOptions? CreateHttpClientOptions()
-    {
-        var headers = new Dictionary<string, string>
+        // No closure: state passed explicitly + static lambda
+        return _httpClientCache.Get(_clientId, (apiKey: _apiKey, encryptedKey: _encryptedKey), static state =>
         {
-            { "authorization", _apiKey }
-        };
+            var headers = new Dictionary<string, string>
+            {
+                { "authorization", state.apiKey }
+            };
 
-        if (_encryptedKey.HasContent())
-            headers.Add("encrypted_key", _encryptedKey);
+            if (state.encryptedKey.HasContent())
+                headers.Add("encrypted_key", state.encryptedKey);
 
-        return new HttpClientOptions
-        {
-            BaseAddressUri = new Uri("https://api.bland.ai/v1/"),
-            DefaultRequestHeaders = headers
-        };
+            return new HttpClientOptions
+            {
+                BaseAddressUri = new Uri("https://api.bland.ai/v1/"),
+                DefaultRequestHeaders = headers
+            };
+        }, cancellationToken);
     }
 
     public void Dispose()
