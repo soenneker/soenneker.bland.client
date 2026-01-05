@@ -42,7 +42,7 @@ public sealed class BlandClientUtil : IBlandClientUtil
 
             return new HttpClientOptions
             {
-                BaseAddressUri = new Uri("https://api.bland.ai/v1/"),
+                BaseAddress = new Uri("https://api.bland.ai/v1/"),
                 DefaultRequestHeaders = headers
             };
         }, cancellationToken);
