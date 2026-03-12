@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Soenneker.Bland.Client.csproj" />
+        <ProjectReference Include="..\..\src\Soenneker.Bland.Client\Soenneker.Bland.Client.csproj" />
     </ItemGroup>
 
     <ItemGroup>
