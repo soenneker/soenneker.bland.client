@@ -38,7 +38,7 @@ jobs:
         run: dotnet build test/Soenneker.Bland.Client.Tests/Soenneker.Bland.Client.Tests.csproj --configuration Release --no-restore --verbosity minimal
 
       - name: Test
-        run: dotnet test test/Soenneker.Bland.Client.Tests/Soenneker.Bland.Client.Tests.csproj --configuration Release --no-build --no-restore --verbosity minimal
+        run: dotnet test --project test/Soenneker.Bland.Client.Tests/Soenneker.Bland.Client.Tests.csproj --configuration Release --no-build --no-restore --verbosity minimal
 
       - name: Pack
         run: dotnet pack src/Soenneker.Bland.Client/Soenneker.Bland.Client.csproj --configuration Release --no-build --no-restore --output . --verbosity minimal
