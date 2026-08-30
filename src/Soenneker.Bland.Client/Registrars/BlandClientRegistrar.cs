@@ -6,7 +6,7 @@ using Soenneker.Utils.HttpClientCache.Registrar;
 namespace Soenneker.Bland.Client.Registrars;
 
 /// <summary>
-/// An async thread-safe singleton for Bland.ai's HTTP client
+/// Registers the Bland.ai HTTP-client provider and cache.
 /// </summary>
 public static class BlandClientRegistrar
 {
