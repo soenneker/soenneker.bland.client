@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace Soenneker.Bland.Client;
 
+/// <inheritdoc cref="IBlandClientUtil" />
 public sealed class BlandClientUtil : IBlandClientUtil
 {
     private readonly IHttpClientCache _httpClientCache;
