@@ -23,7 +23,7 @@ public sealed class BlandClientUtil : IBlandClientUtil
     public BlandClientUtil(IHttpClientCache httpClientCache, IConfiguration configuration)
     {
         _httpClientCache = httpClientCache;
-        _apiKey = configuration.GetValueStrict<string>("Bland:ApiKey");
+        _apiKey = configuration.GetStringStrict("Bland:ApiKey");
         _encryptedKey = configuration.GetValue<string>("Bland:EncryptedKey");
     }
 
